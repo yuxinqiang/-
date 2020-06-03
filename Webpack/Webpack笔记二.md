@@ -89,7 +89,7 @@ entry: () => new Promise((resolve) => resolve(['./demo', './demo2']))
 
 基础的`output`配置：
 
-![基础配置](https://github.com/yuxinqiang/Study-notes/blob/master/images/webpack/output-配置基础.png)
+![基础配置](https://github.com/yuxinqiang/Study-notes/blob/master/Webpack/images/output-1.png)
 
 
 
