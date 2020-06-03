@@ -89,17 +89,15 @@ entry: () => new Promise((resolve) => resolve(['./demo', './demo2']))
 
 基础的`output`配置：
 
-![基础配置](https://github.com/yuxinqiang/Study-notes/blob/master/Webpack/images/output-1.png)
-
-
+![基础配置](./images/output-1.png)
 
 高级配置项：
 
-![高级配置](E:\Project\personPro\学习笔记\Webpack\Webpack笔记二.assets\output-配置高级.png)
+![高级配置](./images/output-2.png)
 
 专家级配置项：
 
-![专家级](E:\Project\personPro\学习笔记\Webpack\Webpack笔记二.assets\output-配置专家（有风险）.png)
+![专家级](./images/output-3.png)
 
 ## 二、使用不同语言进行配置
 
