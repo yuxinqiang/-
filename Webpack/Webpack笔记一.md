@@ -184,7 +184,7 @@ __webpack_public_path__ = myRuntimePublicPath
 // 剩余的应用程序入口
 ```
 
-## loader
+## 三、loader
 
 用来处理非JavaScript文件，将所有类型文件转换为webpack能够给处理的有效模块，类似于`gulp`中的任务（task）。
 
@@ -291,3 +291,113 @@ webpack --module-bind jade-loader --module-bind 'css=style-loader!css-loader'
 - 除了使用 `package.json` 常见的 `main` 属性，还可以将普通的 npm 模块导出为 loader，做法是在 `package.json` 里定义一个 `loader` 字段。
 - 插件(plugin)可以为 loader 带来更多特性。
 - loader 能够产生额外的任意文件。
+
+## 插件
+
+插件和loader的不同点在于，插件可以执行范围更广的任务，从打包优化到压缩，一直到重新定义环境中的变量，是web pack的支柱功能。插件的目的在于解决loader无法实现的其他事。
+
+常见的插件使用方式：
+
+```javascript
+const HtmlWebpackPlugin = require('html-webpack-plugin'); // 通过 npm 安装
+const webpack = require('webpack'); // 用于访问内置插件
+
+const config = {
+  module: {
+    rules: [
+      { test: /\.txt$/, use: 'raw-loader' }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({template: './src/index.html'})
+  ]
+};
+
+module.exports = config;
+```
+
+插件的实质是一个具有`apply`属性的JavaScript对象。`apply`属性会被webpack compiler调用，并且compiler对象可在整个编译生命周期访问。
+
+### 用法
+
+由于插件可以携带参数/选项，所以必须在配置中向`piugins`属性传入`new`实例
+
+```javascript
+const HtmlWebpackPlugin = require('html-webpack-plugin'); //通过 npm 安装
+const webpack = require('webpack'); //访问内置的插件
+const path = require('path');
+
+const config = {
+  entry: './path/to/my/entry/file.js',
+  output: {
+    filename: 'my-first-webpack.bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        use: 'babel-loader'
+      }
+    ]
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin(),
+    new HtmlWebpackPlugin({template: './src/index.html'})
+  ]
+};
+
+module.exports = config;
+```
+
+## 模式
+
+通过选择 `development` 或 `production` 之中的一个，来设置 `mode` 参数，可以启用相应模式下的 webpack 内置的优化
+
+```javascript
+module.exports = {
+  mode: 'production'
+};
+```
+
+从CLI参数中传递
+
+```js
+webpack --mode=production
+```
+
+| 选项          | 描述                                                         |
+| ------------- | ------------------------------------------------------------ |
+| `development` | 会将 `process.env.NODE_ENV` 的值设为 `development`。启用 `NamedChunksPlugin` 和 `NamedModulesPlugin`。 |
+| `production`  | 会将 `process.env.NODE_ENV` 的值设为 `production`。启用 `FlagDependencyUsagePlugin`, `FlagIncludedChunksPlugin`, `ModuleConcatenationPlugin`, `NoEmitOnErrorsPlugin`, `OccurrenceOrderPlugin`, `SideEffectsFlagPlugin` 和 `UglifyJsPlugin`. |
+
+*记住，只设置* `NODE_ENV`*，则不会自动设置* `mode`*。*
+
+### mode: development
+
+```diff
+// webpack.development.config.js
+module.exports = {
++ mode: 'development'
+- plugins: [
+-   new webpack.NamedModulesPlugin(),
+-   new webpack.DefinePlugin({ "process.env.NODE_ENV": JSON.stringify("development") }),
+- ]
+}
+```
+
+### mode: production
+
+```diff
+// webpack.production.config.js
+module.exports = {
++  mode: 'production',
+-  plugins: [
+-    new UglifyJsPlugin(/* ... */),
+-    new webpack.DefinePlugin({ "process.env.NODE_ENV": JSON.stringify("production") }),
+-    new webpack.optimize.ModuleConcatenationPlugin(),
+-    new webpack.NoEmitOnErrorsPlugin()
+-  ]
+}
+```
+
