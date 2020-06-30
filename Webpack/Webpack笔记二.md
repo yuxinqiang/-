@@ -99,6 +99,36 @@ entry: () => new Promise((resolve) => resolve(['./demo', './demo2']))
 
 ![专家级](./images/output-3.png)
 
+**`output.auxiliaryComment`**
+
+数据类型： `string`  `object`
+
+和`output.library`和`output.libraryTarget`一起使用时，此选项允许用户向导出容器中插入注释
+
+要为`libraryTarget`每种类型插入相同的注释，将`auxiliaryComment`设置为一个字符串
+
+![auxiliaryComment](./images/output-4.png)
+
+生成结果如下：
+
+![](./images/output-5.png)
+
+对于`libraryTarget`每种类型的注释进行更细粒度地控制，请传入一个对象：
+
+![](./images/output-6.png)
+
+**`output.chunkFilename`**
+
+数据类型： `string` `function`
+
+决定非入口（non-entry）chunk文件的名称
+
+注意，这些文件名需要在runtime根据chunk发送的请求去生成。因此，需要在webpack runtime输出bundle值时，将chunk id 的值对应映射到占位符（如`[name]`和`chunkhash`）。这回增加文件大小，并且在任何chunk的占位符值修改后，都会使bundle失效。
+
+默认使用`[id].js`或从output.filename中推断出的值
+
+
+
 ## 二、使用不同语言进行配置
 
 webpack接受以多种编程和数据语言编写的配置文件。支持文件的拓展名可在 [node-interpret](https://github.com/js-cli/js-interpret) 中查找
